@@ -222,6 +222,12 @@ Exercises 4.10.b
 Chapter 5
 P96		compute to global memory access ratio (higher the better)
 P98	FIG 5.2	CUDA device memory map
+			register
+			local memory
+			shared memory
+			global memory
+			constant memory
 P101		Scratchpad memory
 P102	TAB 5.1	CUDA variables: Automatic,__device__,__shared__, __constant__
+P106		
 
