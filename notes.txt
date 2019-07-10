@@ -1,0 +1,8 @@
+5:
+	GPU -> device
+	CPU -> host
+	Kernel = function that runs on thedevice
+	
+grid > blocks(2D) > threads(3D)
+
+

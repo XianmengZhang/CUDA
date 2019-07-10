@@ -1,0 +1,227 @@
+Chapter 3
+P47 FIG 3.5	stub function vecAdd()
+P50 FIG 3.7	CUDA API functions for managing device global memory
+			cudaMalloc()
+				((void**)&d_A, size)
+			cudaFree()
+				(d_A)
+P51 FIG 3.8	CUDA API functions for data transfer between host and device
+			cudaMemcpy()
+				(d_A, A, size, cudaMemcpyHostToDevice)
+				(C, d_C, size, cudaMemcpyDeviceToHost)
+		ERROR HANDLING IN CUDA
+			cudaError_t err = cudaMalloc((void**)&d_A, size);
+P52 FIG 3.9	Example 3.7 3.8
+P54 FIG 3.10	block and thread
+			i = blockIdx.x * blockDim.x + threadIdx.x;
+P55 FIG 3.11	kernel function (how to let each thread do its job)
+			__global__
+			void vecAddKernel(float* A, float* B, float* C, int n)
+			{
+			}
+P55 FIG 3.12	Function declaration keyword:
+			__device__
+			__global__
+			__host__
+P57 FIG 3.13	How to call kernel function from stub function
+			vecAddKernel<<<ceil(n/256.0), 256>>>(d_A, d_B, d_C, n);
+			//<<< the number of blocks in the grid
+			//the number of threads in each block >>>
+P58 FIG 3.14	Example 3.7-3.13
+
+
+
+
+
+Exercises 3.1a
+	void 2DvecAdd(float* h_A, float* h_B, float* h_C, int I, int J)	// I is row count, J is column count
+	{
+		int size = I * J * sizeof(float);
+		float * d_A,d_B,d_C;
+		cudaMalloc((void **) &d_A, size);
+		cudaMalloc((void **) &d_B, size);
+		cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
+		cudaMalloc((void **) &d_C, size);
+		cudaMemcpy(d_C, h_C, size, cudaMemcpyHostToDevice);
+		2DvecAddKernel<<<ceil(I*J / 256.0), 256>>>(d_A, d_B, d_C, I, J); // assuming max thread 256
+		cudaMemcpy(h_A, d_A, size, cudaMemcpyDeviceToHost);
+
+		cudaFree(d_Ad); cudaFree(d_B); cudaFree (d_C);
+	}
+Exercises 3.1b
+	__global__
+	void 2DvecAddKernel(float* d_A, float* d_B, float* d_C, int I, int J)
+	{
+		int X = blockIdx.x * blockDim.x + threadIdx.x;
+		if (X < I*J)	d_A[X]=d_B[X]+d_C[X];
+	}
+Exercises 3.1c	//	<<<ceil(I/256),256>>>
+	__global__
+	void 2DvecAddKernel(float* d_A, float* d_B, float* d_C, int I, int J)
+	{
+		int counter;
+		
+		int X = blockIdx.x * blockDim.x + threadIdx.x;
+		if (X < I)
+		{
+			for(counter=0;counter<J;counter++)
+			{
+				d_A[X+counter]=d_B[X+counter]+d_C[X+counter];
+			}
+		}
+	}
+Exercises 3.1d	//	<<<ceil(J/256),256>>>
+	__global__
+	void 2DvecAddKernel(float* d_A, float* d_B, float* d_C, int I, int J)
+	{
+		int counter;
+		
+		int X = blockIdx.x * blockDim.x + threadIdx.x;
+		if (X < J)
+		for(counter=0;counter<I;counter++)
+		{
+			d_A[X+counter*J]=d_B[X+counter*J]+d_C[X+counter*J];
+		}
+	}
+Exercises 3.1e
+	from observation, rank efficiency of each solution: b>c>d. b is the best because it makes use of maximum amount of thread number and reduce the load of each thread. While d is the worst because it has the maximum overhead for each round of calculation for each thread, it needs to calculate the address of each column of values.
+
+
+
+
+
+
+
+Exercises 3.2
+	void vecMult(float* h_A, float* h_B, float* h_C, int SQ)//SQ = square
+	{
+		int sizeV =  SQ * sizeof(float);
+		int sizeM =  SQ * SQ * sizeof(float);
+		float * d_A,d_B,d_C;
+		cudaMalloc((void **) &d_A, sizeV);
+		cudaMalloc((void **) &d_B, sizeM);
+		cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
+		cudaMalloc((void **) &d_C, sizeV);
+		cudaMemcpy(d_C, h_C, size, cudaMemcpyHostToDevice);
+		vecMultKernel<<<ceil(SQ / 256.0), 256>>>(d_A, d_B, d_C, I, J); // assuming max thread 256
+		cudaMemcpy(h_A, d_A, size, cudaMemcpyDeviceToHost);
+
+		cudaFree(d_Ad); cudaFree(d_B); cudaFree (d_C);
+	}
+	__global__
+	void vecMultKernel(float* d_A, float* d_B, float* d_C, int SQ)
+	{
+		int X = blockIdx.x * blockDim.x + threadIdx.x;
+		if (X < SQ)
+		{
+			for(int Y = 0; Y < SQ ; Y++)
+			{
+				d_A[X]=d_B[X*SQ + Y]+d_C[X];
+			}
+		}
+	}
+Exercises 3.3
+	The purpose of host functions in most cases are to set up for device functions to execute
+	The execution heavy host function defeats the purpose of CUDA
+
+Exercises 3.4
+	???
+Exercises 3.5
+	C
+Exercises 3.6
+	C
+Exercises 3.7
+	C
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chapter 4
+P66		gridDim blockDim blockIdx
+		gridDim.xyz = [1,65536]
+		blockIdx.xyz = [0,gridDim.xyz-1]
+P69		dim3 dimBlock(ceil(n/16.0), ceil(m/16.0), 1);	// how many blocks in each grid
+		dim3 dimGrid(16, 16, 1);			// how many threads in each blocks
+		pictureKernel <<< dimGrid, dimBlock >>> (d_Pin, d_Pout, n, m);
+P72 FIG 4.4	kernel function for 2D thread mapping
+		int Row = blockIdx.y * blockDim.y + threadIdx.y
+P73 FIG 4.5	2D threading on processing image pixels
+P76 FIG 4.6	matrix multiplication
+P77 FIG 4.7	Example 4.6, kernel code
+P77		compile-time constant
+		autotuning
+P78 FIG 4.8	Example 4.6, host code
+		16*16 blocks in a grid
+		64*64 threads in a block
+P81		CUDA allows threads in the same block to coordinate their
+activities using a barrier synchronization function __syncthreads()
+P82 FIG 4.11	barrier synchronization
+		__syncthreads() must be executed by all threads in the same block and through the same path (if else statement)
+P83		threads cannot barrier synchronize others in different blocks
+P84 FIG 4.12	transparent scalability
+		streaming muliprocessors
+P86		cudaGetDeviceCount()
+		cudaGetDeviceProperties()
+		dev_prop.maxThreadsPerBlock
+		dev_prop.multiProcessorCount
+		dev_prop.clockRate
+		dev_prop.maxThreadsDim[012]	// threads in xyz dimension in each block
+		dev_prop.maxGridSize[012]	// blocks in xyz dimension in each grid
+P88		dev_prop.warpSize		// size of warps in a device
+P89 FIG 4.14	SM, SP and Warp relations
+		latency tolerance / latency hiding
+P90		zero-overhead thread scheduling
+
+Exercises 4.1
+	C
+Exercises 4.2
+	C
+Exercises 4.3
+	B // assuming optimization will leave 2 warps (0/32,16/32) majorly empty instead of 4 half-full warps (20/32 * 4)
+Exercises 4.4
+	Maximum number of resident grids per device: 16
+	Maximum number of threads per block: 1024
+	Warp size: 32
+	Maximum number of resident blocks per multiprocessor: 16
+	Maximum number of resident warps per multiprocessor: 64
+	Maximum number of resident threads per multiprocessor: 2048
+	Assuming to maximize warp utility
+	1024 * 351 = 359424 (576 short of 400 * 900)
+	352 blocks needed, last block will have 576 thread left which is divisible by 32
+	Not sure how to optimize since we do not know the total amount of devices
+	each grid will have 11*2*1 = 22 blocks
+	each blocks will have 8*8*16 = 1024 threads
+Exercises 4.5
+	576
+Exercises 4.6
+	17.083%
+Exercises 4.7
+	lacking enough information
+Exercises 4.8
+	No, all thread in the same block should have similar logic pattern for each instance of barrier synchronization. It would be wasting processing power if threads in the same block takes very different time to reach barrier.
+Exercises 4.9
+	I will be surprised because his multiplication code uses 1024 threads in each block, while the CUDA device only allows 512 threads per block and 8 blocks per SM
+Exercises 4.10.a
+	BLOCK_SIZE = BLOCK_WIDTH ^ 2 (might misunderstood the question)
+	BLOCK_SIZE = 1 (transpose it self will always work)
+Exercises 4.10.b
+	Insert a barrier synchronization before the last line of code so blockA array will be completed before it is referenced.
+
+
+
+
+Chapter 5
+P96		compute to global memory access ratio (higher the better)
+P98	FIG 5.2	CUDA device memory map
+P101		Scratchpad memory
+P102	TAB 5.1	CUDA variables: Automatic,__device__,__shared__, __constant__
+
