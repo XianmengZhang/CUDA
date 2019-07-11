@@ -210,7 +210,7 @@ Exercises 4.8
 	No, all thread in the same block should have similar logic pattern for each instance of barrier synchronization. It would be wasting processing power if threads in the same block takes very different time to reach barrier.
 Exercises 4.9
 	I will be surprised because his multiplication code uses 1024 threads in each block, while the CUDA device only allows 512 threads per block and 8 blocks per SM
-Exercises 4.10.a
+Exercises 4.10.aa
 	BLOCK_SIZE = BLOCK_WIDTH ^ 2 (might misunderstood the question)
 	BLOCK_SIZE = 1 (transpose it self will always work)
 Exercises 4.10.b
@@ -221,13 +221,39 @@ Exercises 4.10.b
 
 Chapter 5
 P96		compute to global memory access ratio (higher the better)
-P98	FIG 5.2	CUDA device memory map
+P98 FIG 5.2	CUDA device memory map
 			register
 			local memory
 			shared memory
 			global memory
 			constant memory
 P101		Scratchpad memory
-P102	TAB 5.1	CUDA variables: Automatic,__device__,__shared__, __constant__
-P106		
+P102 TAB 5.1	CUDA variables: Automatic,__device__,__shared__, __constant__
+P111		global memory access is reduced by N if the tasked is tiled with N*N tiles
+P112 FIG 5.12	tile method to utilize locality
 
+P116		dev_prop.regsPerBlock gives the number of registers available in each
+SM (through cudaGetDeviceProperties())
+P117		dev_prop.sharedMemPerBlock
+P118		Use extern to change your CUDA declaration easily
+Exercises 5.1
+	No, all the data were used once therefore not exhibiting locality characteristic 
+Exercises 5.2
+	As tile size increases, the size of each tile row will increase proportionally, in the case of matrix multiplication, each row of a matrix will be used and hence the global memory access time will be reduced proportionally to the tile size growth.
+Exercises 5.3
+	some thread finishes early will try to load the next tile, while slower thread will try to access the current tile, this results in shared memory keep loading and unloading its current space with global memory
+Exercises 5.4
+	In a case where the result from on block needs to be processed by another block, it would make more sense to store the result in shared memory instead of first block's registers. Extra memory relocation will be needed in shared memory if the second block wants to read first block's register.
+Exercises 5.5
+	C
+Exercises 5.6
+	D
+Exercises 5.7	???
+	B
+Exercises 5.8	???
+	the shared memory can be accessed by any thread in the block while L1 cache can only be accessed by a single processor
+Exercises 5.9a	???
+	N
+Exercises 5.9b	???
+	N/T
+Exercises 5.10a
