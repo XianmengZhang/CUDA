@@ -225,7 +225,7 @@ P98 FIG 5.2	CUDA device memory map
 			register
 			local memory
 			shared memory
-			global memory
+			global memory	(DRAM)
 			constant memory
 P101		Scratchpad memory
 P102 TAB 5.1	CUDA variables: Automatic,__device__,__shared__, __constant__
@@ -248,7 +248,7 @@ Exercises 5.5
 	C
 Exercises 5.6
 	D
-Exercises 5.7	???
+Exercises 5.7
 	B
 Exercises 5.8	???
 	the shared memory can be accessed by any thread in the block while L1 cache can only be accessed by a single processor
@@ -257,3 +257,94 @@ Exercises 5.9a	???
 Exercises 5.9b	???
 	N/T
 Exercises 5.10a
+	36/200 < 7*4/100, memory bound
+Exercises 5.10b
+	36/300 > 7*4/250, compute bound
+Exercises 5.11
+	??? cannot find what compute capability is, except for the documentation on Nvidia webpage
+
+Chapter 6
+P127		control flow
+		diverge (in their execution)
+P128		reduction algorithm (split large task into multiple small tasks)
+P129 FIG 6.2	example kernel code for sum reduction
+P131 FIG 6.4	example kernel code for sum reduction,improved
+P134		DRAM and coalesces
+P136 FIG 6.8	coalesced access
+P138 FIG 6.9	not coalesced access
+P139 FIG 6.10	shared memory can help coalescing
+P140 FIG 6.11	example kernel code for  FIG 6.6~6.10
+P141		accessing arrays in shared memory does not require coalescing to achieve high-speed
+P143		performance cliff
+Exercises 6.1
+	// for "/2", some corner cases was simplified
+	// still not quite sure how the thread count can be reduced
+	///////////////////////////////
+	__shared__ float partialSum[]
+	unsigned int t = threadIdx.x*2;
+	if (t <= threadIdx.x)
+	{
+		for (unsigned int stride = 1; stride < blockDim.x; stride *= 2)
+		{
+			__syncthreads();
+			if (t % (2*stride) == 0)
+			partialSum[t] += partialSum[t+stride];
+		}
+	}
+	///////////////////////////////
+	__shared__ float partialSum[];
+	unsigned int t = threadIdx.x/2;
+	for (unsigned int stride = blockDim.x/2; stride > 1; stride /= 2)
+	{
+		__syncthreads();
+		if (t < stride)
+		partialSum[t] += partialSum[t+stride];
+	}
+	Yes, but very little
+	Memory bus conflict and thread/block distribution problem
+Exercises 6.2
+	the second method introduce less operations
+Exercises 6.3
+(1) adding the statements that load a section of the input array from global memory to shared memory
+(2) using blockIdx.x to allow multiple blocks to work on different sections of the input array
+(3) writing the reduction value for the section to a location according to the blockIdx.x so that all blocks will deposit their section reduction value to the lower part of the input array in global memory.
+	__global__
+	void sumReductionKernel(float* d_A)
+	{
+		__shared__ float s_A[blockDim.x];
+		for (int m = 0; m < blockDim.x; ++m)
+		{
+			s_A[m] = d_A[blockDim.x*blockIdx.x + m];
+		}
+
+		unsigned int t = threadIdx.x; // assuming thread numbers is already set as half of size of s_A
+
+		for (unsigned int stride = blockDim.x/2; stride > 1; stride /= 2)
+		{
+			__syncthreads();
+			if (t < stride)
+			{
+				s_A[t] += s_A[t+stride];
+			}
+		}
+		d_A[blockIdx.x] = s_A[0] + s_A[1];
+	}
+Exercises 6.4
+(1) transfer a large input array to the global memory
+(2) use a loop to repeatedly invoke the kernel you wrote for Exercise 6.3 with adjusted execution configuration parameter values so that the reduction result for the input array will eventually be produced.
+
+	void sumReduction(float* h_A, int size)	// size is the number of elements in 1D array h_A
+	{
+		float * d_A;
+
+		cudaMalloc((void **) &d_A, size);
+		cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
+		sumReductionKernel<<<ceil(n / 256.0), 256>>>(d_A); // assuming 256 threads
+		cudaMemcpy(h_A, d_A, size, cudaMemcpyDeviceToHost);
+
+		cudaFree(d_A);
+	}
+
+			vecAddKernel<<<ceil(n/256.0), 256>>>(d_A, d_B, d_C, n);
+			//<<< the number of blocks in the grid
+			//the number of threads in each block >>>
