@@ -348,34 +348,3 @@ Exercises 6.4
 			vecAddKernel<<<ceil(n/256.0), 256>>>(d_A, d_B, d_C, n);
 			//<<< the number of blocks in the grid
 			//the number of threads in each block >>>
-
-Chapter 7
-P156 FIG 7.4	no-zero, abrupt underflow, and denorm formats in float
-			for No-zero representation of 2-bit-E and 2-bit-M, it can represent:
-			0.5	0.625	0.75	0.875
-			1	1.25	1.5	1.75
-			2	2.5	3	3.5
-P156 FIG 7.5	no-zero format
-			exponent bits define the major intervals of representable numbers		(range, 4-1=3 for 2 bit)
-			mantissa bits define the number of representable numbers in each interval	(precision, 1/4 for 2 bit)
-			no representation of 0
-			representable numbers are located denser toward the neighborhood of 0
-			at vincinity of 0 the previous statement is not true, aka the gap		(with m bits in the mantissa, this style of representation would introduce 2^m times more error in the interval closest to 0 than the next interval.)
-P158 FIG 7.6	abrupt underflow format
-			same as no-zero format but has zero and cannot represent (-1,1), aka larger gap
-P158 FIG 7.7	denorm (denormalization) format
-			take the no-zero format and expand the closest interval to fill the gap
-			costly hardware implementation
-			current IEEE standard
-P159 FIG 7.8	IEEE standard on what special E and M bit patterns do
-P160	7.3	Single-precision numbers:
-			1-bit S  8-bit E  23-bit M
-		Double-precision numbers:
-			1-bit S  11-bit E  52-bit M
-		Since a double-precision number has 29 more bits for mantissa, the largest error for representing a number is reduced to 1/(2^29) of that of the single-precision format
-		sNaN
-		qNaN
-P161	7.4	bottom of the page, not sure what it is, typo?
-		ULP: units in the last place
-		If the hardware is designed to perform arithmetic and rounding operations perfectly, the most errors that one should introduce should be no more than 0d0.5 ULP
-		
