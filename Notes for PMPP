@@ -378,4 +378,9 @@ P160	7.3	Single-precision numbers:
 P161	7.4	bottom of the page, not sure what it is, typo?
 		ULP: units in the last place
 		If the hardware is designed to perform arithmetic and rounding operations perfectly, the most errors that one should introduce should be no more than 0d0.5 ULP
-		
+P164	7.5	float calculation order will affect the outcome because float is an approximation 
+		having the numbers sorted in ascending order allows a sequential float addition to get higher accuracy
+		sorting is frequently used in massively parallel numerical algorithms
+		Kahan’s summation algorithm for getting an even more robust approach to accurate summation of floating-point values
+	7.6	numerically stable
+		numerically unstable
