@@ -384,3 +384,17 @@ P164	7.5	float calculation order will affect the outcome because float is an app
 		Kahan’s summation algorithm for getting an even more robust approach to accurate summation of floating-point values
 	7.6	numerically stable
 		numerically unstable
+P169	7.7	communication-avoiding algorithms
+
+
+
+Exercises 7.1
+	With the addition of 1 extra bit of mantissa, the representable number is twice as dense in each interval, the precision is not 1/8 of each interval
+Exercises 7.2
+	With the addition of 1 extra bit of exponent, the range of representable number is now streched from 1/8 (2^-3) to 14(2^3+3*2^1)
+Exercises 7.3 
+	Max ULP is 2^(number of mantissa) it could be two numbers very close to 0.5 from the 0 side and add together to result a 0, where ULP is of size 2^(- number of mantissa)
+Exercises 7.4
+	The purpose of sorting float array from small to big is to avoid big float crushing small float's accuracy, the algorithm in figure 6.4 is just like that, to add big float and small float to cut time.
+Exercises 7.5
+	IEEE single-precision numbers has 23 bits of mantissa, 9 clock cycle allow the generation of 18 bits of mantissa, the maximum ULP will be 2^(23-18) - 1= 0D31 ULP 
