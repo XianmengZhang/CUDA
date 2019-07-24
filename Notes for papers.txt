@@ -1,2 +1,39 @@
-Hello
-
+>>>>>The GPU Computing Era(12 April 2010)
+John Nickolls
+William J. Dally
+	Early GPUs had fixed functions, later on they were added with programmable flexibility
+	CUDA is designed to be scalable
+	Heterogeneous CPUþGPU coprocessing systems evolved because the CPU and GPU have complementary attributes that allow applications to perform best using both types of processors
+	A heterogeneous coprocessing architecture that combines a single latency-optimized core (a CPU) with many throughputoptimized cores (a GPU) performs better than either alternative alone
+	
+>>>>>GPUs and the Future of Parallel Computing(17 October 2011)
+Stephen W. Keckler
+William J. Dally
+Brucek Khailany
+Michael Garland
+David Glasco
+	power supply voltage scaling has largely stopped, causing energy per operation to now scale only linearly with process feature size
+	The result is that all computers, from mobile devices to supercomputers, have or will become constrained by power and energy rather than area
+	CPU architecture were optimized for single-thread performance with features such as branch prediction, out-of-order execution, and large primary instruction and data caches. Most of the energy is consumed in overheads of data supply,instruction supply, and control
+	(CPU)Today, the energy of a reasonable standard-cell-based, double-precision fused-multiply add (DFMA) is around 50 pJ, which would constitute less than 3 percent of the computational operation’s energy per instruction.
+	 data movement will dominate future systems’ power dissipation
+	 accessing DRAM cost 200 times greater than accessing SRAM
+	 Current architectures encourage a flat view of memory with implicit data caching occurring at multiple levels of the machine,this approach is not sustainable for scalable machines
+	 Processors can mitigate the effects of increased latency by relying on increasing amounts of parallelism, particularly finegrained thread and data parallelism (fetch data once and use it multiple times to avoid data bus congestion)
+	 However, most programming systems don’t provide a convenient means of managing tens, much less tens of thousands, of threads on a single die
+	 Future machines will be increasingly heterogeneous. Individual processor chips will likely contain processing elements with different performance characteristics, memory hierarchy views, and levels of physical parallelism
+	 Nvidia Research team has embarked on the Echelon project to develop computing architectures that address energy-efficiency and memory-bandwidth challenges and provide features that facilitate programming of scalable parallel systems
+	 
+	 
+>>>>>Dynamic Warp Formation and Scheduling for Efficient GPU Control Flow(1-5 Dec. 2007)
+Wilson W.L. Fung
+Ivan Sham
+George Yuan
+Tor M. Aamodt
+	naive handling of branch divergence incurs a significant performance penalty on the GPU for controlflow intensive applications relative to an ideal multipleinstruction, multiple-data architecture
+	reconverging control flow of processing elements at the immediate post-dominator of the divergent branch is nearly optimal
+	important to find better branch handling mechanisms
+	branch divergence hazzard: When an inputdependent branch leads to different control flow paths for different threads in a warp, because an SIMD pipeline cannot execute different instructions in the same cycle
+	naive solution to handle branch divergence: serialize the threads within a warp as soon as the program counters diverge, reconvergence mechanism needs to be used in order to prevent wasting resources
+	immediate post-dominator: this is the point that is recommended to converge, usually
+	Example of iPDOM is not the best: 3.3 not sure why ?????
