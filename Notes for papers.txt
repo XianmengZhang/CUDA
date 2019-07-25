@@ -30,10 +30,14 @@ Wilson W.L. Fung
 Ivan Sham
 George Yuan
 Tor M. Aamodt
-	naive handling of branch divergence incurs a significant performance penalty on the GPU for controlflow intensive applications relative to an ideal multipleinstruction, multiple-data architecture
+	naive handling of branch divergence incurs a significant performance penalty on the GPU for controlflow intensive applications relative to an ideal multiple-instruction, multiple-data architecture
 	reconverging control flow of processing elements at the immediate post-dominator of the divergent branch is nearly optimal
 	important to find better branch handling mechanisms
-	branch divergence hazzard: When an inputdependent branch leads to different control flow paths for different threads in a warp, because an SIMD pipeline cannot execute different instructions in the same cycle
+	branch divergence hazzard: When an input dependent branch leads to different control flow paths for different threads in a warp, because an SIMD pipeline cannot execute different instructions in the same cycle
 	naive solution to handle branch divergence: serialize the threads within a warp as soon as the program counters diverge, reconvergence mechanism needs to be used in order to prevent wasting resources
 	immediate post-dominator: this is the point that is recommended to converge, usually
 	Example of iPDOM is not the best: 3.3 not sure why ?????
+	Dynamic Warp Formation & Scheduling: take partial threads from different warp (that has divergence in it) to form a new warp so every clockcycle a warp launched will be full
+	lane aware dynamic warp formation: A better way to put multiple threads form different warps into a new warp and avoid conflict, based on each thread's original position in the each warp
+	
+
