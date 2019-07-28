@@ -39,5 +39,29 @@ Tor M. Aamodt
 	Example of iPDOM is not the best: 3.3 not sure why ?????
 	Dynamic Warp Formation & Scheduling: take partial threads from different warp (that has divergence in it) to form a new warp so every clockcycle a warp launched will be full
 	lane aware dynamic warp formation: A better way to put multiple threads form different warps into a new warp and avoid conflict, based on each thread's original position in the each warp
+	thread swizzling: when created the first warp, land all threads in a way purposely so that it can fuse with other warps easily while maintain its "lane" position (101010)(010101) => (111111)(000000)
+	dynamic warp formation has the potential to fully utilize the SIMD pipeline only when the set of PC values currently being executed is small relative to the number of scalar threads (lots of thread doing little branch)
+	Heuristics:
+		controlling each thread to have similar depth of branching is optimal, becuase if all threads have different depth, it is hard to do dynamic warp formation (different PC)
+		Majority (DMaj):			Choosing the most common PC among all the existing warps and issuing all warps at this PC before choosing a new PC
+		Minority (DMin):			The least frequent PCs are given priority with the hope that, by doing so, these warps may eventually catch up and converge with other threads
+		Time Stamp (DTime):			The oldest warp will be issued first
+		Post-Dominator Priority (DPdPri):	If the issue priority is set lower for warps that have gone beyond more post-dominators, then the threads that have yet to go past the post-dominator tend to catch up
+		Program Counter (DPC):			By giving higher issuing priority to warps with smaller PCs, threads lagging behind are given the opportunity to catch up
+		
+		
+>>>>>Improving GPU Performance via Large Warps and Two-Level Warp Scheduling(December 3-7, 2011)
+Veynu Narasiman
+Michael Shebanow
+Chang Joo Lee
+Rustam Miftakhutdinov
+Onur Mutlu
+Yale N. Patt
+	Our goal is to improve GPU performance by better utilizing computational resources. To alleviate the performance penalty due to branch divergence, we propose the large warp microarchitecture(LWM).
+	creating fewer but correspondingly larger warps (that have a significantly larger number of threads than the SIMD width of the core), and dynamically creating SIMD width sized sub-warps that only have active threads (during divergence in PC)
 	
-
+	To reduce the number of idle FU (functional unit / core) cycles, applieda two-level round-robin warp instruction fetch scheduling policy on top of conventional GPU cores as well as the LWM
+	This policy splits all concurrently executing warps into fetch groups (e.g., 32 warps could be split up into 4 fetch groups of 8 warps each) and prioritizes warps from a single fetch group until they reach a stalling point (i.e., long latency operation).  Then, the next fetch group is selected and the policy repeats. Warps in the same fetch group can be covered by locality ????
+	The scheduling policy within a fetch group is round-robin, and switching from one fetch group to another is also done in a round-robin fashion (hence two-level round-robin).
+	Once a warp is selected in the fetch stage, it cannot be selected again until that warp completes execution.
+	Once a warp reaches the final stage of the pipeline, its PC and active mask are updated and the warp is again considered for scheduling
