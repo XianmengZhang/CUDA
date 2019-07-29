@@ -59,9 +59,25 @@ Onur Mutlu
 Yale N. Patt
 	Our goal is to improve GPU performance by better utilizing computational resources. To alleviate the performance penalty due to branch divergence, we propose the large warp microarchitecture(LWM).
 	creating fewer but correspondingly larger warps (that have a significantly larger number of threads than the SIMD width of the core), and dynamically creating SIMD width sized sub-warps that only have active threads (during divergence in PC)
+	To improve long latency tolerance, we propose a two-level round-robin warp scheduling policy. This policy prevents all warps from arriving at the same long latency operation at the same time, thereby reducing idle execution cycles. (also preserving the locality as well)
 	
-	To reduce the number of idle FU (functional unit / core) cycles, applieda two-level round-robin warp instruction fetch scheduling policy on top of conventional GPU cores as well as the LWM
+	
 	This policy splits all concurrently executing warps into fetch groups (e.g., 32 warps could be split up into 4 fetch groups of 8 warps each) and prioritizes warps from a single fetch group until they reach a stalling point (i.e., long latency operation).  Then, the next fetch group is selected and the policy repeats. Warps in the same fetch group can be covered by locality ????
-	The scheduling policy within a fetch group is round-robin, and switching from one fetch group to another is also done in a round-robin fashion (hence two-level round-robin).
+	The scheduling policy within a fetch group is round-robin, and switching from one fetch group to another is also done in a round-robin fashion (hence two-level round-robin)
 	Once a warp is selected in the fetch stage, it cannot be selected again until that warp completes execution.
 	Once a warp reaches the final stage of the pipeline, its PC and active mask are updated and the warp is again considered for scheduling
+	LWM with thread count of 256 works the best: if each thread of a large warp executes a loop for a different number of iterations, big warps size suffer because thread with small iterations is waiting for thread with large iterations (for loop + ifelse). On the other hand LWM with small thread count will suffer from not able to fully utilize dynamic warp formation.
+	LWM with large thread thread count works fine with simple divergence (ifelse).
+	fetch group size of 8 warps works best (two-level scheduling, with a fetch group size of 8)
+	
+>>>>>Cache-Conscious Wavefront Scheduling(1-5 Dec 2012)
+Timothy G. Rogers
+Mike OConnor
+Tor M. Aamodt
+	Intra-wavefront locality: locality that occurs when data is initially referenced and re-referenced from the same wavefront (warp)
+	Intra-wavefront locality is a combination of intra-thread locality (where data is private to a single scalar thread) and inter-thread locality (where data is shared among scalar threads in the same wavefront)
+	The majority of data reuse observed in our HCS benchmarks comes from intra-wavefront locality, Cache-Conscious Wavefront Scheduling is introduced to exploit it.
+	CCWS alerts the scheduler if its decisions are destroying intra-wavefront locality (lost intra-wavefront locality detector (LLD))
+	Correct amound of wavefronts can hide long latency operation and too many wavefront can destroy intra-wavefront locality (lots of misses)
+	static wavefront limiting (SWL): current CUDA or OpenCL can define wavefront size, but GPU will run as many of them as possible. SWL is a register extension added to wavefront scheduling logic to limit the number of wavefronts that can be launched concurrently
+	The goal of CCWS is to dynamically determine the number of wavefronts allowed to access the memory system and which wavefronts those should be
