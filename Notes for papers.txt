@@ -81,3 +81,9 @@ Tor M. Aamodt
 	Correct amound of wavefronts can hide long latency operation and too many wavefront can destroy intra-wavefront locality (lots of misses)
 	static wavefront limiting (SWL): current CUDA or OpenCL can define wavefront size, but GPU will run as many of them as possible. SWL is a register extension added to wavefront scheduling logic to limit the number of wavefronts that can be launched concurrently
 	The goal of CCWS is to dynamically determine the number of wavefronts allowed to access the memory system and which wavefronts those should be
+	Victim Tag Array (VTA) cannot be too large other wise it will keep track off every single cache miss and disrupt the scheduling ???
+	simply increasing the capacity of the L1 cache only diminishes the performance impact of CCWS with small enough input sets. Hence, we believe CCWS will have an even greater impact on data sizes used in real workloads
+	
+>>>>>Energy-efficient mechanisms for managing thread context in throughput processors(4-8 June 2011)
+Too many people
+	
