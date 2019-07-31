@@ -86,4 +86,14 @@ Tor M. Aamodt
 	
 >>>>>Energy-efficient mechanisms for managing thread context in throughput processors(4-8 June 2011)
 Too many people
+	Extreme multithreading requires a complicated thread scheduler as well as a large register file, whichis expensive to access both in terms of energy and latency
 	
+	register file caching to replace accesses to the large main register file (RFC MRF)
+	The total register file capacity across the chip is 2MB, substantially exceeding the size of the L2 cache
+	nearly 10% of total GPU power is consumed by the register file
+	special write back procedure to prevent writing back "dead" data
+
+
+	a two-level thread scheduler that maintains a small set of active threads to hide ALU and local memory access latency and a larger set of pending threads to hide main memory latency
+
+	A two-level scheduler dramatically reduces the size of the RFC by allocating entries only to active warps
