@@ -97,3 +97,13 @@ Too many people
 	a two-level thread scheduler that maintains a small set of active threads to hide ALU and local memory access latency and a larger set of pending threads to hide main memory latency
 
 	A two-level scheduler dramatically reduces the size of the RFC by allocating entries only to active warps
+	
+>>>>>Debunking the 100X GPU vs. CPU Myth:An Evaluation of Throughput Computing on CPU and GPU(June 19 - 23, 2010)
+	include description of many CPU and GPU benchmark algorithms, covering a wide range of tasks
+	limiting factors in both part:
+		memory bandwith
+		compute power
+		cache policy
+		gather and scatter methods (how to collect and store data to process)
+		reduction and synchronization (barrier, thousands of cycles on CPU, 1 milisecond on GPU)
+		fixed functionality (some features are fixed)
