@@ -50,7 +50,7 @@ Tor M. Aamodt
 		Program Counter (DPC):			By giving higher issuing priority to warps with smaller PCs, threads lagging behind are given the opportunity to catch up
 		
 		
->>>>>Improving GPU Performance via Large Warps and Two-Level Warp Scheduling(December 3-7, 2011)
+>>>>>Improving GPU Performance via Large Warps and Two-Level Warp Scheduling (December 3-7, 2011)
 Veynu Narasiman
 Michael Shebanow
 Chang Joo Lee
@@ -70,7 +70,7 @@ Yale N. Patt
 	LWM with large thread thread count works fine with simple divergence (ifelse).
 	fetch group size of 8 warps works best (two-level scheduling, with a fetch group size of 8)
 	
->>>>>Cache-Conscious Wavefront Scheduling(1-5 Dec 2012)
+>>>>>Cache-Conscious Wavefront Scheduling (1-5 Dec 2012)
 Timothy G. Rogers
 Mike OConnor
 Tor M. Aamodt
@@ -84,7 +84,7 @@ Tor M. Aamodt
 	Victim Tag Array (VTA) cannot be too large other wise it will keep track off every single cache miss and disrupt the scheduling ???
 	simply increasing the capacity of the L1 cache only diminishes the performance impact of CCWS with small enough input sets. Hence, we believe CCWS will have an even greater impact on data sizes used in real workloads
 	
->>>>>Energy-efficient mechanisms for managing thread context in throughput processors(4-8 June 2011)
+>>>>>Energy-efficient mechanisms for managing thread context in throughput processors (4-8 June 2011)
 Too many people
 	Extreme multithreading requires a complicated thread scheduler as well as a large register file, whichis expensive to access both in terms of energy and latency
 	
@@ -107,3 +107,20 @@ Too many people
 		gather and scatter methods (how to collect and store data to process)
 		reduction and synchronization (barrier, thousands of cycles on CPU, 1 milisecond on GPU)
 		fixed functionality (some features are fixed)
+>>>>>GPU register file virtualization (December 05 - 09, 2015)
+Hyeran Jeon
+Gokul Subramanian Ravi
+Nam Sung Kim
+Murali Annavaram
+	uses compiler-generated register lifetime information  to  proactively  release  registers  from one warp and opportunistically re-allocate that register to other warps
+	
+	Kepler relies on compiler to generate the dependency information and this information is conveyed to the hardware using metadata instructions that are embedded in the code
+	A recent study found that one metadata instruction is added per seven instruction
+	To enable register sharing across warps,  it is necessary to separate architected registers from the physical register space they occupy (allow multiple architected registers to share a single physical register)
+	Per instruction release flag
+	Per branch release flag
+	Applications that have longer execution time derive higher register savings and hence our approach is particularly appealing to large kernels
+>>>>>Shared Memory Consistency Models: A Tutorial (September 1995)
+Sarita V. Adve
+Kourosh Gharachorloo
+	
