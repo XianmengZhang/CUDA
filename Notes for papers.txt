@@ -5,7 +5,8 @@ William J. Dally
 	CUDA is designed to be scalable
 	Heterogeneous CPUþGPU coprocessing systems evolved because the CPU and GPU have complementary attributes that allow applications to perform best using both types of processors
 	A heterogeneous coprocessing architecture that combines a single latency-optimized core (a CPU) with many throughputoptimized cores (a GPU) performs better than either alternative alone
-	
+
+
 >>>>>GPUs and the Future of Parallel Computing(17 October 2011)
 Stephen W. Keckler
 William J. Dally
@@ -48,8 +49,8 @@ Tor M. Aamodt
 		Time Stamp (DTime):			The oldest warp will be issued first
 		Post-Dominator Priority (DPdPri):	If the issue priority is set lower for warps that have gone beyond more post-dominators, then the threads that have yet to go past the post-dominator tend to catch up
 		Program Counter (DPC):			By giving higher issuing priority to warps with smaller PCs, threads lagging behind are given the opportunity to catch up
-		
-		
+
+
 >>>>>Improving GPU Performance via Large Warps and Two-Level Warp Scheduling (December 3-7, 2011)
 Veynu Narasiman
 Michael Shebanow
@@ -69,7 +70,8 @@ Yale N. Patt
 	LWM with thread count of 256 works the best: if each thread of a large warp executes a loop for a different number of iterations, big warps size suffer because thread with small iterations is waiting for thread with large iterations (for loop + ifelse). On the other hand LWM with small thread count will suffer from not able to fully utilize dynamic warp formation.
 	LWM with large thread thread count works fine with simple divergence (ifelse).
 	fetch group size of 8 warps works best (two-level scheduling, with a fetch group size of 8)
-	
+
+
 >>>>>Cache-Conscious Wavefront Scheduling (1-5 Dec 2012)
 Timothy G. Rogers
 Mike OConnor
@@ -83,7 +85,8 @@ Tor M. Aamodt
 	The goal of CCWS is to dynamically determine the number of wavefronts allowed to access the memory system and which wavefronts those should be
 	Victim Tag Array (VTA) cannot be too large other wise it will keep track off every single cache miss and disrupt the scheduling ???
 	simply increasing the capacity of the L1 cache only diminishes the performance impact of CCWS with small enough input sets. Hence, we believe CCWS will have an even greater impact on data sizes used in real workloads
-	
+
+
 >>>>>Energy-efficient mechanisms for managing thread context in throughput processors (4-8 June 2011)
 Too many people
 	Extreme multithreading requires a complicated thread scheduler as well as a large register file, whichis expensive to access both in terms of energy and latency
@@ -97,7 +100,8 @@ Too many people
 	a two-level thread scheduler that maintains a small set of active threads to hide ALU and local memory access latency and a larger set of pending threads to hide main memory latency
 
 	A two-level scheduler dramatically reduces the size of the RFC by allocating entries only to active warps
-	
+
+
 >>>>>Debunking the 100X GPU vs. CPU Myth:An Evaluation of Throughput Computing on CPU and GPU(June 19 - 23, 2010)
 	include description of many CPU and GPU benchmark algorithms, covering a wide range of tasks
 	limiting factors in both part:
@@ -120,7 +124,13 @@ Murali Annavaram
 	Per instruction release flag
 	Per branch release flag
 	Applications that have longer execution time derive higher register savings and hence our approach is particularly appealing to large kernels
+
+
 >>>>>Shared Memory Consistency Models: A Tutorial (September 1995)
 Sarita V. Adve
 Kourosh Gharachorloo
-	
+	Sequential Consistency:
+		the result of any execution is the same as if the operations of all the processors were executed in some sequential order
+			(maintaining a single sequential order among operations from all processors)
+		the operations of each individual processor appear in this sequence in the order specified by its program
+			(maintaining program order among operations from individual processors)
