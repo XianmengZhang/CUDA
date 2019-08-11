@@ -134,3 +134,17 @@ Kourosh Gharachorloo
 			(maintaining a single sequential order among operations from all processors)
 		the operations of each individual processor appear in this sequence in the order specified by its program
 			(maintaining program order among operations from individual processors)
+	5.1	Sequential Consistency for architecture without caches (could have memory operation reordering)
+		5.1.1
+			maintaining program order between a write and a following read operation
+				(some memory has write buffer but no read buffer, write finishes after read, even though write is issued after read)
+		5.1.2	
+			maintaining program order between two write operations
+				(first write instruction must be executed first, write something and then write a flag)
+		5.1.3
+			maintaining program order between a read and a following read or write operation
+				(first read instruction must be executed first, read flag and then decide what's next)
+	5.2	Sequential Consistency for architecture with caches
+		5.2.1
+			a write is eventually made visible to all processors
+			writes to the same location appear to be seen in the same order by all processors
