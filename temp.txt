@@ -1,0 +1,7 @@
+>>>>>Cache coherence for GPU architectures(23-27 Feb 2013 )
+Inderpreet Singh
+Arrvindh Shriraman
+Wilson W. L. Fung
+Mike O'Connor
+Tor M. Aamodt
+	GPUs lack cache coherence and require disabling of private caches if an application requires memory operations to be visible across all cores
