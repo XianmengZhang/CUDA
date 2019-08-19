@@ -154,4 +154,10 @@ Kourosh Gharachorloo
 		eliminating memory operations through optimizations such as register allocation can also violate sequential consistency
 	Relaxed memory model:
 		read and write to different address can be reordered, bad for synchronizing between different cores
-	
+>>>>>Cache coherence for GPU architectures(23-27 Feb 2013 )
+Inderpreet Singh
+Arrvindh Shriraman
+Wilson W. L. Fung
+Mike O'Connor
+Tor M. Aamodt
+	GPUs lack cache coherence and require disabling of private caches if an application requires memory operations to be visible across all cores
