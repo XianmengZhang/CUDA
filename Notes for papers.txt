@@ -161,3 +161,19 @@ Wilson W. L. Fung
 Mike O'Connor
 Tor M. Aamodt
 	GPUs lack cache coherence and require disabling of private caches if an application requires memory operations to be visible across all cores
+	
+	
+	
+	
+>>>>>GPUfs: Integrating a File System with GPUs(March 16 - 20, 2013)
+Mark Silberstein
+Bryan Ford
+Idit Keidar
+Emmett Witchel
+	GPUfs follows common GPU programming practices by requiring all threads in a warp to cooperate to perform the  same  operation,  and  requires  applications  to  invoke  the file system API at warp—rather than thread—granularity
+
+>>>>>GPUNet: Networking Abstractions for GPU Programs
+	Three essential characteristics make developing efficient network abstractions for discrete GPUs challenging
+		massive parallelism
+		slow access to CPU memory
+		low single-thread performance
