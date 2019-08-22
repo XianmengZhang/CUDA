@@ -172,8 +172,15 @@ Idit Keidar
 Emmett Witchel
 	GPUfs follows common GPU programming practices by requiring all threads in a warp to cooperate to perform the  same  operation,  and  requires  applications  to  invoke  the file system API at warp—rather than thread—granularity
 
->>>>>GPUNet: Networking Abstractions for GPU Programs
+>>>>>GPUNet: Networking Abstractions for GPU Programs(October 6–8, 2014)
 	Three essential characteristics make developing efficient network abstractions for discrete GPUs challenging
 		massive parallelism
 		slow access to CPU memory
 		low single-thread performance
+	enabling GPUs to access network hardware and the networking software stack directly, via familiar network abstractions like sockets, will hasten GPU integration in modern network systems
+	Direct transfers between the NIC and GPU eliminate redundant PCIe transfers and data copies to system memory, improving data transfer throughput and reducing latency (Instead of letting CPU manage GPUs' behavior, let GPUs have the ability to talk to each other)
+	Modern CPU operating systems provide high-level I/O abstractions like sockets, which eliminate or hide this type of programming complexity from ordinary application developers. GPUnet is intended to do the same for GPU programmers
+	emote Direct Memory Access (RDMA) allows remote peers to read from and write directly into application buffers over the network
+	discrete GPUs outperform hybrid GPUs by an order of magnitude in compute capacity and memory bandwidth, making them attractive for the data center, and therefore a reasonable choice for prototyping GPU networking support
+	traditional GPU-accelerated network server requires large batches of work to amortize CPU-GPU communications and invocation overheads
+	GPUnet makes it possible for GPU servers to handle multiple independent requests without having to batch them first
